@@ -1,0 +1,149 @@
+#  libopen62541 Makefile.uk
+#
+#  Authors: Felipe Huici <felipe.huici@neclab.eu>
+#
+#
+#  Copyright (c) 2019, NEC Europe Ltd., NEC Corporation. All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#  3. Neither the name of the copyright holder nor the names of its
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+#  THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY.
+#
+
+################################################################################
+# Library registration
+################################################################################
+$(eval $(call addlib_s,libopen62541,$(CONFIG_LIBOPEN62541)))
+
+################################################################################
+# Original sources 
+################################################################################
+LIBOPEN62541_VERSION=9f1cbfa96fd050220c86d3e5939d88cab1b680ce
+LIBOPEN62541_URL=https://github.com/neonious/open62541/archive/$(LIBOPEN62541_VERSION).zip
+
+$(eval $(call fetchas,libopen62541,$(LIBOPEN62541_URL),v$(LIBOPEN62541_VERSION).zip))
+
+################################################################################
+# Helpers
+################################################################################
+LIBOPEN62541_EXTRACTED=$(LIBOPEN62541_ORIGIN)/open62541-$(LIBOPEN62541_VERSION)
+
+################################################################################
+# Library includes
+################################################################################
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/include
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/src
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/src/client
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/arch
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/deps
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_EXTRACTED)/plugins/include
+LIBOPEN62541_INCLUDES += -I$(LIBOPEN62541_BASE)/include
+
+CINCLUDES-$(CONFIG_LIBOPEN62541)   += $(LIBOPEN62541_INCLUDES)
+CXXINCLUDES-$(CONFIG_LIBOPEN62541) += $(LIBOPEN62541_INCLUDES)
+
+################################################################################
+# Global flags
+################################################################################
+LIBOPEN62541_SUPPRESS_FLAGS += -Wno-unused-parameter              \
+	          	       -Wno-strict-aliasing               \
+		  	       -Wno-implicit-function-declaration \
+			       -Wno-cast-function-type
+
+LIBOPEN62541_CFLAGS-y   += $(LIBOPEN62541_SUPPRESS_FLAGS) \
+			   -DUA_ARCHITECTURE_POSIX
+LIBOPEN62541_CXXFLAGS-y += $(LIBOPEN62541_SUPPRESS_FLAGS) \
+			   -DUA_ARCHITECTURE_POSIX        \
+			   -Wno-conversion-null
+
+################################################################################
+# Sources
+################################################################################
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_BASE)/glue.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_BASE)/statuscodes.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_BASE)/namespace0_generated.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/arch/network_tcp.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/arch/posix/ua_clock.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/arch/posix/ua_architecture_functions.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/atoi.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/base64.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/itoa.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/jsmn/jsmn.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/libc_time.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/pcg_basic.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/deps/string_escape.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_connection.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_securechannel.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_timer.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_types.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_types_encoding_binary.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_types_encoding_json.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_util.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/ua_workqueue.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_connect.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_connect_async.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_discovery.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_highlevel.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_subscriptions.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/client/ua_client_worker.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_discovery_manager.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_nodes.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_securechannel_manager.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_binary.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_config.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_discovery.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_discovery_mdns.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_ns0.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_server_utils.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_attribute.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_discovery.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_discovery_multicast.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_method.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_monitoreditem.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_nodemanagement.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_securechannel.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_session.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_subscription.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_services_view.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_session.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_session_manager.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_subscription.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_subscription_datachange.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_subscription_events.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/src/server/ua_subscription_monitoreditem.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_accesscontrol_default.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_config_default.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_debug_dump_pkgs.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_log_stdout.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_nodestore_default.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/ua_pki_default.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/securityPolicies/securitypolicy_mbedtls_common.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/securityPolicies/ua_securitypolicy_basic128rsa15.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/securityPolicies/ua_securitypolicy_basic256.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/securityPolicies/ua_securitypolicy_basic256sha256.c
+LIBOPEN62541_SRCS-y += $(LIBOPEN62541_EXTRACTED)/plugins/securityPolicies/ua_securitypolicy_none.c
