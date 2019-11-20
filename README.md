@@ -1,4 +1,4 @@
-libzlib for Unikraft
+libopen62541 for Unikraft
 ===================
 This is a port of open62541 to Unikraft. You will need lwip and newlib
 to compile it, i.e., in your application's Makefile make sure to
