@@ -1,0 +1,7 @@
+config LIBOPEN62541
+	   bool "open62541 - C implementation of OPC UA"
+	   default y
+	   select LIBNEWLIBC
+	   select LIBLWIP
+	   select LWIP_IPV6
+	   select UKSYSINFO
