@@ -1,0 +1,6 @@
+name        := "open62541"
+description := "An open source and free implementation of OPC UA (OPC Unified Architecture)."
+gitrepo     := "https://github.com/open62541/open62541.git"
+homepage    := "https://github.com/open62541/open62541/"
+license     := "MPL-2.0"
+version     := 9f1cbfa sha256:7b660f20f37c8f109ed2a96307ce47a54772e392c42b9fd96e8a2cf2a1c674bd https://github.com/neonious/open62541/archive/9f1cbfa.tar.gz
